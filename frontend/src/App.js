@@ -3,11 +3,12 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Regsiter';
 import ProtectedPage from './components/ProtectedPage';
+import Spinner from './components/Spinner';
 
 function App() {
   return (
-  
     <div>
+      <Spinner/>
     <BrowserRouter>
     <Routes>
       <Route path='/' element={<ProtectedPage><Home/></ProtectedPage>}/>
