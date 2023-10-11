@@ -8,7 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999; /* Make it appear above other content */
+  z-index: 9999; /* Make it appear above other content */
 }
 .spinner{
     width: 50px;
