@@ -69,6 +69,7 @@ router.get("/get-current-user",authMiddleware,async(req,res)=>{
     try {
         //get user
         const user = await User.findById(req.body.userId);
+        
         res.send({
             success:true,
             message:"User fetched successfully",

@@ -2,10 +2,14 @@ import { message } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { GetCurrentUser } from '../apicalls/users'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
+import { setLoader } from '../redux/loadersSlice';
+import { setUser } from '../redux/userSlice';
 
 function ProtectedPage({children}){
     const navigate = useNavigate();
-    const [user,setUser] = useState(null)
+    const dispatch = useDispatch();
+    const {user} = useSelector((state=>state.users));
     const layout={
         padding:"25px"
     }
@@ -32,14 +36,17 @@ function ProtectedPage({children}){
     
     const validationToken=async()=>{
         try {
+            dispatch(setLoader(true))
             const response = await GetCurrentUser();
+            dispatch(setLoader(false))
             if(response.success){
-                setUser(response.data);
+                dispatch(setUser(response.data))
             }else{
                 navigate("/login")
                 message.error(response.message)
             }
         } catch (error) {
+            dispatch(setLoader(false))
             navigate("/login")
             message.error(error.message);
         }
@@ -63,7 +70,7 @@ function ProtectedPage({children}){
             </h1>
             <div style={users}>
             <i className="ri-shield-user-line"></i>
-            <span style={user_name}>{user.name}</span>
+            <span style={user_name} onClick={()=>navigate("/profile")}>{user.name}</span>
             <i className="ri-logout-box-r-line"
                 onClick={()=>{
                     localStorage.removeItem("token");
