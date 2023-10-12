@@ -1,9 +1,14 @@
 import { Col, Form, Input, Modal, Row, Tabs, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AddProduct, DeleteProduct, EditProduct } from "../../../apicalls/products";
+import {
+  AddProduct,
+  DeleteProduct,
+  EditProduct,
+} from "../../../apicalls/products";
 import { setLoader } from "../../../redux/loadersSlice";
+import Images from "./images";
 const additionalThings = [
   {
     label: "Bill Available",
@@ -23,7 +28,6 @@ const additionalThings = [
   },
 ];
 
-
 const rules = [
   {
     required: true,
@@ -34,21 +38,21 @@ function ProductsForm({
   showProductForm,
   setShowProductForm,
   selectedProduct,
-  getData, 
+  getData,
 }) {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.users);
-  
+  const [selectedTab = "1",setSelectedTab] = useState("1");
   const onFinish = async (values) => {
     try {
       dispatch(setLoader(true));
       let response = null;
-      if(selectedProduct){
-        response = await EditProduct(selectedProduct._id,values);
-      }else{
+      if (selectedProduct) {
+        response = await EditProduct(selectedProduct._id, values);
+      } else {
         values.seller = user._id;
         values.status = "pending";
-       response= await AddProduct(values);
+        response = await AddProduct(values);
       }
       dispatch(setLoader(false));
       if (response.success) {
@@ -86,6 +90,7 @@ function ProductsForm({
       onOk={() => {
         formRef.current.submit();
       }}
+      {...(selectedTab==="2" && {footer:false})}
     >
       <div>
         <h1
@@ -99,7 +104,9 @@ function ProductsForm({
         >
           {selectedProduct ? "Edit Product" : "Add Product"}
         </h1>
-        <Tabs>
+        <Tabs defaultActiveKey="1"
+        activeKey={selectedTab}
+        onChange={(key)=>setSelectedTab(key)}>
           <Tabs.TabPane tab="General" key="1">
             <Form
               layout="vertical"
@@ -161,8 +168,12 @@ function ProductsForm({
               </div>
             </Form>
           </Tabs.TabPane>
-          <Tabs.TabPane tab="Images" key="2">
-            <h1>Images</h1>
+          <Tabs.TabPane tab="Images" key="2" disabled={!selectedProduct}>
+            <Images
+              selectedProduct={selectedProduct}
+              getData={getData}
+              setShowPoductForm={setShowProductForm}
+            />
           </Tabs.TabPane>
         </Tabs>
       </div>
