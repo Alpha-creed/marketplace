@@ -14,9 +14,9 @@ export const AddProduct = async (payload) => {
 };
 
 //get all products
-export const GetProducts = async () => {
+export const GetProducts = async (filters) => {
   try {
-    const response = await axiosInstance.get("/api/products/get-products");
+    const response = await axiosInstance.post("/api/products/get-products",filters);
     return response.data;
   } catch (error) {
     return error.message;
@@ -45,5 +45,18 @@ export const DeleteProduct = async (id)=>{
         return response.data;
     }catch(error){
         return error.message;
+    }
+}
+
+//upload product image
+export const UploadProductImage = async(payload)=>{
+    try {
+        const response = await axiosInstance.post(
+            "/api/products/upload-image-to-product",
+            payload
+        );
+        return response.data;
+    } catch (error) {
+        return error.message
     }
 }

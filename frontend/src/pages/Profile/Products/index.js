@@ -1,7 +1,7 @@
 import { Button, Table, message } from "antd";
 import React, { useEffect, useState } from "react";
 import ProductsForm from "./ProductsForm";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setLoader } from "../../../redux/loadersSlice";
 import { DeleteProduct, GetProducts } from "../../../apicalls/products";
 import moment from "moment";
@@ -15,6 +15,7 @@ function Product() {
     justifyContent: "end",
     marginBottom: "5px",
   };
+  const { user } = useSelector((state) => state.users);
   const dispatch = useDispatch();
   const deleteProduct = async (id) => {
     try {
@@ -35,7 +36,7 @@ function Product() {
   const getData = async () => {
     try {
       dispatch(setLoader(true));
-      const response = await GetProducts();
+      const response = await GetProducts({ seller: user._id });
       dispatch(setLoader(false));
       if (response.success) {
         setProducts(response.products);
@@ -73,7 +74,8 @@ function Product() {
     {
       title: "Added On",
       dataIndex: "createdAt",
-      render: (text, record) => moment(record.createdAt).format("DD-MM-YYYY hh:mm A"),
+      render: (text, record) =>
+        moment(record.createdAt).format("DD-MM-YYYY hh:mm A"),
     },
     {
       title: "Action",

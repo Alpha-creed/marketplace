@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css'
 import store from './redux/store';
 import {Provider} from 'react-redux'
+// import 'antd/dist/antd.css'; // Import Ant Design CSS
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
