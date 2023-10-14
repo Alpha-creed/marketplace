@@ -34,7 +34,7 @@ router.post("/get-products", async (req, res) => {
       .sort({ createdAt: -1 });
     res.send({
       success: true,
-      products,
+      data: products,
     });
   } catch (error) {
     res.send({
@@ -51,6 +51,21 @@ router.put("/edit-product/:id", authMiddleware, async (req, res) => {
     res.send({
       success: true,
       message: "Product updated successfully",
+    });
+  } catch (error) {
+    res.send({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
+router.get("/get-product-by-id/:id", async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id).populate("seller");
+    res.send({
+      success: true,
+      data: product,
     });
   } catch (error) {
     res.send({
@@ -111,12 +126,12 @@ router.post(
   }
 );
 
-//update product status 
+//update product status
 router.put("/update-product-status/:id", authMiddleware, async (req, res) => {
   try {
     const { status } = req.body;
     await Product.findByIdAndUpdate(req.params.id, { status });
-    res.send({  
+    res.send({
       success: true,
       message: "Product status updated successfully",
     });
@@ -125,7 +140,7 @@ router.put("/update-product-status/:id", authMiddleware, async (req, res) => {
       success: false,
       message: error.message,
     });
-    console.log(error)
+    console.log(error);
   }
 });
 

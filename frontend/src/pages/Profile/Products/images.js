@@ -2,7 +2,7 @@ import { Button, Upload, message } from "antd";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setLoader } from "../../../redux/loadersSlice";
-import { UploadProductImage } from "../../../apicalls/products";
+import { EditProduct, UploadProductImage } from "../../../apicalls/products";
 
 function Images({
   selectedProduct,
@@ -37,7 +37,42 @@ function Images({
             
         }
     }
+
+    const deleteImage = async(image)=>{
+        try {
+            const updatedImagesArray = images.filter((img)=>img !==image);
+            const updatedProduct = {...selectedProduct,images:updatedImagesArray}
+            const response = await EditProduct(
+                selectedProduct._id,
+                updatedProduct
+            )
+            if(response.success){
+                message.success(response.message);
+                setImages(updatedImagesArray)
+                getData()
+            }else{
+                throw new Error(response.messsage)
+            }
+            dispatch(setLoader(true))
+        } catch (error) {
+            dispatch(setLoader(false))
+            message.error(error.message)
+        }
+    }
   return <div>
+    <div style={{display:"flex",gap:5,margin:"10px 0"}}>
+        {
+            images.map((img)=>{
+                return (
+                    <div style={{padding:"3px",display:"flex",gap:2,border:"1px solid #7C7C7C",borderRadius:"5px",alignItems:"end"}}>
+                        <img style={{height:"100px",width:"100px",objectFit:"cover"}} src={img} alt=""/>
+                        <i className="ri-delete-bin-line"
+                        onClick={()=>deleteImage(img)}></i>
+                    </div>
+                )
+            }
+        )}
+        </div>
     <Upload
         listType="picture"
         beforeUpload={()=>false}
@@ -47,19 +82,7 @@ function Images({
         }}
         showUploadList={showPreview}
     >
-        <div style={{display:"flex",gap:5,margin:"10px 0"}}>
-        {
-            images.map((img)=>{
-                return (
-                    <div style={{padding:"3px",display:"flex",gap:2,border:"1px solid #7C7C7C",borderRadius:"5px",alignItems:"end"}}>
-                        <img style={{height:"100px",width:"100px",objectFit:"cover"}} src={img} alt=""/>
-                        <i className="ri-delete-bin-line"
-                        onClick={()=>{}}></i>
-                    </div>
-                )
-            }
-        )}
-        </div>
+        
         <Button type="dashed" >
             Upload Image
         </Button>

@@ -39,7 +39,7 @@ function Product() {
       const response = await GetProducts({ seller: user._id });
       dispatch(setLoader(false));
       if (response.success) {
-        setProducts(response.products);
+        setProducts(response.data);
       }
     } catch (error) {
       dispatch(setLoader(false));

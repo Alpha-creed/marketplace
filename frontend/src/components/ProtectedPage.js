@@ -63,7 +63,7 @@ function ProtectedPage({ children }) {
       <div>
         {/* header */}
         <div style={header}>
-          <h1 style={{ fontSize: "25px", color: "white",cursor:"pointer" }}>ALMP</h1>
+          <h1 style={{ fontSize: "25px", color: "white",cursor:"pointer" }} onClick={()=>navigate("/")}>ALMP</h1>
           <div style={users}>
             <i className="ri-shield-user-line"></i>
             <span style={user_name} onClick={() =>{ 
