@@ -3,18 +3,32 @@ import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { GetProductById } from "../../apicalls/products";
 import { setLoader } from "../../redux/loadersSlice";
-import { message } from "antd";
-
+import Divider from "../../components/Divider";
+import { Button, message } from "antd";
+import moment from "moment"
+import BidModal from "./BidModal";
 function ProductInfo() {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [showAddNewBid,setShowAddNewBid] = useState(false);
   const [product, setProduct] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const productOverview = {
     display: "grid",
-    gridTemplateColumns: "repeat(5,minmax(0,1fr)",
+    gridTemplateColumns: "repeat(2,minmax(0,1fr)",
+    gap: 20,
   };
-
+  const headingStyles = {
+    fontSize: "20px",
+    fontStyle: "bold",
+    color: "#660000",
+    textTransform: "uppercase",
+  };
+  const subHeadingStyles = {
+    display: "flex",
+    justifyContent: "space-between",
+    margin: "10px 0",
+  };
   const { id } = useParams();
   const getData = async () => {
     try {
@@ -50,29 +64,104 @@ function ProductInfo() {
             />
             <div style={{ display: "flex", gap: 5 }}>
               {product.images.map((image, index) => {
-                  const smallImageStyles={
-                    border: selectedImageIndex === index ? '1px dashed #003333' : '',
-                    width: "70px",
-                    height: "70px",
-                    objectFit: "cover",
-                    borderRadius: "15px",
-                    cursor: "pointer",
-                    padding:"5px",
-                  }
+                const smallImageStyles = {
+                  border:
+                    selectedImageIndex === index ? "1px dashed #003333" : "",
+                  width: "70px",
+                  height: "70px",
+                  objectFit: "cover",
+                  borderRadius: "15px",
+                  cursor: "pointer",
+                  padding: "5px",
+                };
                 return (
                   <img
-                    style={
-                        smallImageStyles
-                    }
-                    onClick={()=>setSelectedImageIndex(index)}
+                    style={smallImageStyles}
+                    onClick={() => setSelectedImageIndex(index)}
                     src={image}
                     alt=""
                   />
                 );
               })}
             </div>
+            <Divider />
+            <div>
+              <h4 style={{color:"#404040"}}>
+                Added On
+              </h4>
+              <span>
+                {moment(product.createdAt).format("MMM D,YYYY hh:mm A")}
+              </span>
+            </div>
+          </div>
+
+          {/* details */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <div>
+              <h1 style={headingStyles}>{product.name}</h1>
+              <span>{product.description}</span>
+            </div>
+            <Divider />
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <h1 style={headingStyles}>Product details</h1>
+              <div style={subHeadingStyles}>
+                <span>Price </span>
+                <span>$ {product.price}</span>
+              </div>
+              <div style={subHeadingStyles}>
+                <span>Category </span>
+                <span style={{ textTransform: "uppercase" }}>
+                  {product.category}
+                </span>
+              </div>
+              <div style={subHeadingStyles}>
+                <span>Bill Available </span>
+                <span> {product.billAvailable ? "Yes" : "No"}</span>
+              </div>
+              <div style={subHeadingStyles}>
+                <span>Box Available </span>
+                <span> {product.boxAvailable ? "Yes" : "No"}</span>
+              </div>
+              <div style={subHeadingStyles}>
+                <span>Accessories Available </span>
+                <span> {product.accessoriesAvailable ? "Yes" : "No"}</span>
+              </div>
+              <div style={subHeadingStyles}>
+                <span>Warranty Available </span>
+                <span> {product.warrantyAvailable ? "Yes" : "No"}</span>
+              </div>
+            </div>
+            <Divider />
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <h1 style={headingStyles}>Seller details</h1>
+              <div style={subHeadingStyles}>
+                <span>Name </span>
+                <span> {product.seller.name}</span>
+              </div>
+              <div style={subHeadingStyles}>
+                <span>Email </span>
+                <span style={{ textTransform: "uppercase" }}>
+                  {product.seller.email}
+                </span>
+              </div>
+            </div>
+            <Divider />
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <div style={subHeadingStyles}>
+              <h1 style={headingStyles}>Bids</h1>
+              <Button
+                onClick={()=>setShowAddNewBid(!showAddNewBid)}
+              >New Bid</Button>
+              </div>
+              </div>
           </div>
         </div>
+        {showAddNewBid &&<BidModal
+          product={product}
+          reloadData={getData}
+          showBidModal={showAddNewBid}
+          setShowBidModal={setShowAddNewBid}
+        />}
       </div>
     )
   );
