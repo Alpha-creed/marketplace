@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { GetProductById } from "../../apicalls/products";
+import { GetAllBids, GetProductById } from "../../apicalls/products";
 import { setLoader } from "../../redux/loadersSlice";
 import Divider from "../../components/Divider";
 import { Button, message } from "antd";
-import moment from "moment"
+import moment from "moment";
 import BidModal from "./BidModal";
 function ProductInfo() {
+  const { user } = useSelector((state) => state.users);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [showAddNewBid,setShowAddNewBid] = useState(false);
+  const [showAddNewBid, setShowAddNewBid] = useState(false);
   const [product, setProduct] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -36,7 +37,11 @@ function ProductInfo() {
       const response = await GetProductById(id);
       dispatch(setLoader(false));
       if (response.success) {
-        setProduct(response.data);
+        const bidsResponse = await GetAllBids({ product: id });
+        setProduct({
+          ...response.data,
+          bids: bidsResponse.data,
+        });
       }
     } catch (error) {
       dispatch(setLoader(false));
@@ -86,9 +91,7 @@ function ProductInfo() {
             </div>
             <Divider />
             <div>
-              <h4 style={{color:"#404040"}}>
-                Added On
-              </h4>
+              <h4 style={{ color: "#404040" }}>Added On</h4>
               <span>
                 {moment(product.createdAt).format("MMM D,YYYY hh:mm A")}
               </span>
@@ -148,20 +151,27 @@ function ProductInfo() {
             <Divider />
             <div style={{ display: "flex", flexDirection: "column" }}>
               <div style={subHeadingStyles}>
-              <h1 style={headingStyles}>Bids</h1>
-              <Button
-                onClick={()=>setShowAddNewBid(!showAddNewBid)}
-              >New Bid</Button>
+                <h1 style={headingStyles}>Bids</h1>
+                <Button
+                  onClick={() => 
+                    setShowAddNewBid(!showAddNewBid)
+                  }
+                  disabled={user._id === product.seller._id}
+                >
+                  New Bid
+                </Button>
               </div>
-              </div>
+            </div>
           </div>
         </div>
-        {showAddNewBid &&<BidModal
-          product={product}
-          reloadData={getData}
-          showBidModal={showAddNewBid}
-          setShowBidModal={setShowAddNewBid}
-        />}
+        {showAddNewBid && (
+          <BidModal
+            product={product}
+            reloadData={getData}
+            showBidModal={showAddNewBid}
+            setShowBidModal={setShowAddNewBid}
+          />
+        )}
       </div>
     )
   );

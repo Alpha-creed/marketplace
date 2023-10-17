@@ -7,6 +7,7 @@ const cors = require("cors");
 
 const userRoute = require("./routes/userRoute")
 const productsRoute = require("./routes/productsRoute");
+const bidsRoute = require("./routes/bidsRoute")
 
 //middlewares
 // app.use(cors(corsOptions))
@@ -19,7 +20,7 @@ app.use(bodyParser.urlencoded({extended:true}))
 
 app.use("/api/users",userRoute)
 app.use("/api/products",productsRoute);
-
+app.use("/api/bids",bidsRoute);
 
 
 require("dotenv").config();
