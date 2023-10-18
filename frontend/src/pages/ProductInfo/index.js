@@ -162,6 +162,24 @@ function ProductInfo() {
                 </Button>
               </div>
             </div>
+            {product.showBidsOnProductPage&&product.bids.map((bid)=>{
+              return(
+                <div style={{border:"1px solid #BDB9B9",padding:2,borderRadius:"5px"}}>
+                  <div style={{...subHeadingStyles,color:"#7D7D7D"}}>
+                    <span>Name</span>
+                    <span>{bid.buyer.name}</span>
+                  </div>
+                  <div style={{...subHeadingStyles,color:"#7D7D7D"}}>
+                    <span>Bid Amount</span>
+                    <span>{bid.bidAmount}</span>
+                  </div>
+                  <div style={{...subHeadingStyles,color:"#7D7D7D"}}>
+                    <span>Bid Place On</span>
+                    <span>{" "}{moment(bid.createdAt).format("MMM D,YYYY hh:mm A")}</span>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
         {showAddNewBid && (
