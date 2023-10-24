@@ -11,8 +11,8 @@ const Home = () => {
   const [products, setProducts] = useState([]);
   const [filter, setFilters] = useState({
     status: "approved",
-    category:[],
-    age:[]
+    category: [],
+    age: [],
   });
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -58,12 +58,19 @@ const Home = () => {
           setFilters={setFilters}
         />
       )}
-      <div style={{ display: "flex", flexDirection: "column", gap: 20 ,width:"100%"}}>
-        <div style={{ display: "flex", gap: 10,alignItems:"center" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 20,
+          width: "100%",
+        }}
+      >
+        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
           {!showFilters && (
             <i
               className="ri-filter-3-line"
-              style={{ fontSize: "25px",cursor:"pointer" }}
+              style={{ fontSize: "25px", cursor: "pointer" }}
               onClick={() => setShowFilters(!showFilters)}
             ></i>
           )}
@@ -75,7 +82,7 @@ const Home = () => {
               borderRadius: "10px",
               width: "100%",
               padding: "10px",
-              height:"20px"
+              height: "20px",
             }}
           />
         </div>
@@ -114,7 +121,12 @@ const Home = () => {
                   <h1 style={{ fontSize: "18px", textTransform: "capitalize" }}>
                     {product.name}
                   </h1>
-                  <p style={{ fontSize: "12px" }}>{product.description}</p>
+                  <p style={{ fontSize: "12px" }}>
+                    {product.age}
+                    {' '}
+                    {product.age === 1 ? " year ": " years " }
+                    old
+                  </p>
 
                   <Divider />
                   <span style={{ color: "#20A10C" }}>${product.price}</span>

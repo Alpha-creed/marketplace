@@ -3,12 +3,26 @@ const Product = require("../models/productModel");
 const authMiddleware = require("../middleware/authMiddleware");
 const cloudinary = require("../db/cloudinaryConfig");
 const multer = require("multer");
+const User = require("../models/userModel");
+const Notice = require("../models/noticeModel");
 
 //add a new product
 router.post("/add-product", authMiddleware, async (req, res) => {
   try {
     const newProduct = new Product(req.body);
     await newProduct.save();
+    //send notice to admin
+    const admin = await User.find({ role: "admin" });
+    admin.forEach(async (adm) => {
+      const newNotice = new Notice({
+        user: adm._id,
+        message: `New product added by ${req.user.name}`,
+        title: "New product",
+        onClick: `/admin`,
+        read: false,
+      });
+      await newNotice.save();
+    });
     res.send({
       success: true,
       message: "Product added successfully",
@@ -25,7 +39,7 @@ router.post("/add-product", authMiddleware, async (req, res) => {
 router.post("/get-products", async (req, res) => {
   try {
     const { seller, category = [], age = [], status } = req.body;
-   
+
     let filters = {};
     if (seller) {
       filters.seller = seller;
@@ -38,14 +52,14 @@ router.post("/get-products", async (req, res) => {
       filters.category = { $in: category };
     }
     //filter by age
-    if(age.length){
-      age.forEach((item)=>{
+    if (age.length) {
+      age.forEach((item) => {
         const fromAge = item.split("-")[0];
         const toAge = item.split("-")[1];
-        filters.age={$gte:fromAge,$lte:toAge};
-      })
+        filters.age = { $gte: fromAge, $lte: toAge };
+      });
     }
-    
+
     const products = await Product.find(filters)
       .populate("seller")
       .sort({ createdAt: -1 });
@@ -147,7 +161,18 @@ router.post(
 router.put("/update-product-status/:id", authMiddleware, async (req, res) => {
   try {
     const { status } = req.body;
-    await Product.findByIdAndUpdate(req.params.id, { status });
+    const updatedProduct = await Product.findByIdAndUpdate(req.params.id, {
+      status,
+    });
+    //send notice to seller
+    const newNotice = new Notice({
+      user: updatedProduct.seller,
+      message: `Your Product ${updatedProduct.name} has been ${status}`,
+      title: "Product Status Updated",
+      onClick: `/profile`,
+      read: false,
+    });
+    await newNotice.save();
     res.send({
       success: true,
       message: "Product status updated successfully",

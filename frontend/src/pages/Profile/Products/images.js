@@ -81,6 +81,7 @@ function Images({
             setFile(info.file);
             setShowPreview(true)
         }}
+        fileList={file?[file]:[]}
         showUploadList={showPreview}
     >
         

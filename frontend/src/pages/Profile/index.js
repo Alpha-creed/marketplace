@@ -1,6 +1,8 @@
 import { Tabs } from 'antd'
 import React from 'react'
 import Product from './Products'
+import UserBids from './UserBids'
+import UserProfile from './General'
 
 function Profile() {
   return (
@@ -9,11 +11,11 @@ function Profile() {
         <Tabs.TabPane tab="Products" key="1">
             <Product/>
         </Tabs.TabPane>
-        <Tabs.TabPane tab="Bids" key="2">
-            <h1>Bids</h1>
+        <Tabs.TabPane tab="My Bids" key="2">
+            <UserBids/>
         </Tabs.TabPane>
         <Tabs.TabPane tab="General" key="3">
-            <h1>General</h1>
+            <UserProfile/>
         </Tabs.TabPane>
       </Tabs>
     </div>

@@ -169,7 +169,7 @@ function ProductInfo() {
               </div>
               {console.log(product)}
             {product.showBidsOnProductPage &&
-              product.bids.map((bid) => {
+              product?.bids?.map((bid) => {
                 return (
                   <div
                     style={{

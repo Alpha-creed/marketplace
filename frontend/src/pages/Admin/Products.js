@@ -40,6 +40,17 @@ function Product() {
   };
   const columns = [
     {
+      title:"Product",
+      dataIndex:"image",
+      render:(text,record)=>{
+        return(
+          <img src={record?.images?.length>0?record.images[0]:""}
+          alt=""
+          style={{width:"100px",height:"100px",objectFit:"cover",border:"1px solid",borderRadius:"15px"}}/>
+        )
+      }
+    },
+    {
       title: "Product",
       dataIndex: "name",
     },
@@ -47,10 +58,6 @@ function Product() {
       title: "Seller",
       dataIndex: "name",
       render: (text, record) => record.seller.name,
-    },
-    {
-      title: "Description",
-      dataIndex: "description",
     },
     {
       title: "Price",
