@@ -8,7 +8,7 @@ const cors = require("cors");
 const userRoute = require("./routes/userRoute")
 const productsRoute = require("./routes/productsRoute");
 const bidsRoute = require("./routes/bidsRoute")
-
+const noticeRoute = require("./routes/noticeRoute")
 //middlewares
 // app.use(cors(corsOptions))
 // var corsOptions={
@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({extended:true}))
 app.use("/api/users",userRoute)
 app.use("/api/products",productsRoute);
 app.use("/api/bids",bidsRoute);
-
+app.use("/api/notifications",noticeRoute)
 
 require("dotenv").config();
 
@@ -29,7 +29,7 @@ require("dotenv").config();
 const server = ()=>{
     db()
     app.listen(port,()=>{
-        console.log(`Node JS Server statred on port ${port}`);
+        console.log(`Node JS Server started on port ${port}`);
     })
     app.on('error',console.error.bind(console,"MongoDB connection error"))
 }

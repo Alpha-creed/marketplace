@@ -19,9 +19,9 @@ const Register = () => {
         try {
             dispatch(setLoader(true))
             const response = await RegisterUser(values);
-            navigate("/login")
             dispatch(setLoader(false))
             if(response.success){
+                navigate("/login")
                 message.success(response.message)
             }else{
                 throw new Error(response.message)
@@ -41,7 +41,7 @@ const Register = () => {
       <div className='bg-white p-5 rounded w-25'>
       <h3  style={{color:"#9E9E9E"}}>
       AlMP -
-        <span style={{color:"#405138"}}> Register</span>
+        <span style={{color:"#405138",fontSize:"25px"}}> Register</span>
       </h3>
       <Divider />
         <Form

@@ -7,7 +7,6 @@ router.post("/place-new-bid", authMiddleware,async (req, res) => {
   try {
     const newBid = new Bid(req.body);
     await newBid.save();
-    console.log(newBid)
     res.send({ success: true, message: "Bid placed successfully" });
   } catch (error) {
     res.send({ success: false, message: error.message });
@@ -28,7 +27,7 @@ router.post("/get-all-bids", authMiddleware, async(req, res) => {
     const bids = await Bid.find(filters )
     .populate('product')
     .populate('seller')
-    .populate('buyer');
+    .populate('buyer').sort({createdAt:-1});
     res.send({ success: true, data: bids });
 
   } catch (error) {

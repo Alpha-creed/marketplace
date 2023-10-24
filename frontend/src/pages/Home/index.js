@@ -11,6 +11,8 @@ const Home = () => {
   const [products, setProducts] = useState([]);
   const [filter, setFilters] = useState({
     status: "approved",
+    category:[],
+    age:[]
   });
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -42,10 +44,10 @@ const Home = () => {
       message.error(error.message);
     }
   };
+
   useEffect(() => {
     getData();
-  }, []);
-
+  }, [filter]);
   return (
     <div style={{ display: "flex", gap: 5 }}>
       {showFilters && (
@@ -56,8 +58,8 @@ const Home = () => {
           setFilters={setFilters}
         />
       )}
-      <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-        <div style={{ display: "flex", gap: 10 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 20 ,width:"100%"}}>
+        <div style={{ display: "flex", gap: 10,alignItems:"center" }}>
           {!showFilters && (
             <i
               className="ri-filter-3-line"
@@ -73,6 +75,7 @@ const Home = () => {
               borderRadius: "10px",
               width: "100%",
               padding: "10px",
+              height:"20px"
             }}
           />
         </div>

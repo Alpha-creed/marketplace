@@ -41,7 +41,7 @@ useEffect(()=>{
     <div className='bg-white p-5 rounded w-25'>
     <h3  style={{color:"#9E9E9E"}}>
     AlMP -
-      <span style={{color:"#405138"}}> LOGIN</span>
+      <span style={{color:"#405138",fontSize:"25px"}}> LOGIN</span>
     </h3>
     <Divider />
       <Form

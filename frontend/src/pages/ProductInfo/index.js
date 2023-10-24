@@ -133,6 +133,14 @@ function ProductInfo() {
                 <span>Warranty Available </span>
                 <span> {product.warrantyAvailable ? "Yes" : "No"}</span>
               </div>
+              <div style={subHeadingStyles}>
+                <span>Purchased Year </span>
+                <span>
+                  {" "}
+                  {moment().subtract(product.age, "years").format("YYYY")}(
+                  {product.age} years ago)
+                </span>
+              </div>
             </div>
             <Divider />
             <div style={{ display: "flex", flexDirection: "column" }}>
@@ -153,34 +161,45 @@ function ProductInfo() {
               <div style={subHeadingStyles}>
                 <h1 style={headingStyles}>Bids</h1>
                 <Button
-                  onClick={() => 
-                    setShowAddNewBid(!showAddNewBid)
-                  }
+                  onClick={() => setShowAddNewBid(!showAddNewBid)}
                   disabled={user._id === product.seller._id}
                 >
                   New Bid
                 </Button>
               </div>
-            </div>
-            {product.showBidsOnProductPage&&product.bids.map((bid)=>{
-              return(
-                <div style={{border:"1px solid #BDB9B9",padding:2,borderRadius:"5px"}}>
-                  <div style={{...subHeadingStyles,color:"#7D7D7D"}}>
-                    <span>Name</span>
-                    <span>{bid.buyer.name}</span>
+              {console.log(product)}
+            {product.showBidsOnProductPage &&
+              product.bids.map((bid) => {
+                return (
+                  <div
+                    style={{
+                      border: "1px solid #BDB9B9",
+                      padding: 2,
+                      borderRadius: "5px",
+                      margin: "10px 0",
+                    }}
+                  >
+                    <div style={{ ...subHeadingStyles, color: "#7D7D7D" }}>
+                      <span>Name</span>
+                      <span>{bid.buyer.name}</span>
+                    </div>
+                    <div style={{ ...subHeadingStyles, color: "#7D7D7D" }}>
+                      <span>Bid Amount</span>
+                      <span>{bid.bidAmount}</span>
+                    </div>
+                    <div style={{ ...subHeadingStyles, color: "#7D7D7D" }}>
+                      <span>Bid Place On</span>
+                      <span>
+                        {" "}
+                        {moment(bid.createdAt).format("MMM D,YYYY hh:mm A")}
+                      </span>
+                    </div>
                   </div>
-                  <div style={{...subHeadingStyles,color:"#7D7D7D"}}>
-                    <span>Bid Amount</span>
-                    <span>{bid.bidAmount}</span>
-                  </div>
-                  <div style={{...subHeadingStyles,color:"#7D7D7D"}}>
-                    <span>Bid Place On</span>
-                    <span>{" "}{moment(bid.createdAt).format("MMM D,YYYY hh:mm A")}</span>
-                  </div>
-                </div>
-              )
-            })}
+                );
+              })}
           </div>
+          </div>
+
         </div>
         {showAddNewBid && (
           <BidModal

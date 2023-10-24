@@ -49,6 +49,7 @@ function Images({
             if(response.success){
                 message.success(response.message);
                 setImages(updatedImagesArray)
+                setFile(null)
                 getData()
             }else{
                 throw new Error(response.messsage)
